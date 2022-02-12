@@ -1,0 +1,29 @@
+{
+  "questions": [
+    {
+      "english": {
+        "choices": ["hearing", "sleeping", "watching", "eating"],
+        "correct_answer": "hearing",
+        "question": "What are your ears for _________"
+      },
+      "germany": {
+        "choices": ["Hören", "Schlafen", "Aufpassen", "Essen"],
+        "correct_answer": "Hören",
+        "question": "Wofür sind deine Ohren ______"
+      }
+    },
+
+    {
+      "english": {
+        "choices": ["car", "bike", "plane", "rocket"],
+        "correct_answer": "car",
+        "question": "Tesla is _________ company"
+      },
+      "germany": {
+        "choices": ["Wagen", "Fahrrad", "Flugzeug", "Rakete"],
+        "correct_answer": "Wagen",
+        "question": "Tesla ist _________ Unternehmen"
+      }
+    }
+  ]
+}
