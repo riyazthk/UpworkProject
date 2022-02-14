@@ -34,12 +34,21 @@ export const Dashboard = () => {
 
   useEffect(() => {
     if (questionList?.length) {
-      setEngSplitSentence(
-        questionList[0]?.questions[currentQuestion]?.question?.split(' '),
-      );
-      setGerSplitSentence(
-        questionList[1]?.questions[currentQuestion]?.question?.split(' '),
-      );
+      questionList.forEach((item, index) => {
+        if (item?.language === 'english') {
+          setEngSplitSentence(
+            questionList[index]?.questions[currentQuestion]?.question?.split(
+              ' ',
+            ),
+          );
+        } else if (item?.language === 'germany') {
+          setGerSplitSentence(
+            questionList[index]?.questions[currentQuestion]?.question?.split(
+              ' ',
+            ),
+          );
+        }
+      });
     }
   }, [currentQuestion, questionList, questionList?.length]);
 
