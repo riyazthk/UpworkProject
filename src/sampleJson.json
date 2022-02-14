@@ -1,29 +1,44 @@
 {
-  "questions": [
+  "excersices": [
     {
-      "english": {
-        "choices": ["hearing", "sleeping", "watching", "eating"],
-        "correct_answer": "hearing",
-        "question": "What are your ears for _________"
-      },
-      "germany": {
-        "choices": ["Hören", "Schlafen", "Aufpassen", "Essen"],
-        "correct_answer": "Hören",
-        "question": "Wofür sind deine Ohren ______"
-      }
+      "language": "english",
+      "questions": [
+        {
+          "choices": ["hearing", "sleeping", "watching", "eating"],
+          "correct_answer": "hearing",
+          "question": "What are your ears for _________"
+        },
+        {
+          "choices": ["car", "bike", "plane", "rocket"],
+          "correct_answer": "car",
+          "question": "Tesla is _________ company"
+        },
+        {
+          "choices": ["hearing", "sleeping", "watching", "eating"],
+          "correct_answer": "hearing",
+          "question": "What are your ears for _________"
+        }
+      ]
     },
-
     {
-      "english": {
-        "choices": ["car", "bike", "plane", "rocket"],
-        "correct_answer": "car",
-        "question": "Tesla is _________ company"
-      },
-      "germany": {
-        "choices": ["Wagen", "Fahrrad", "Flugzeug", "Rakete"],
-        "correct_answer": "Wagen",
-        "question": "Tesla ist _________ Unternehmen"
-      }
+      "language": "germany",
+      "questions": [
+        {
+          "choices": ["Hören", "Schlafen", "Aufpassen", "Essen"],
+          "correct_answer": "Hören",
+          "question": "Wofür sind deine Ohren ______"
+        },
+        {
+          "choices": ["Wagen", "Fahrrad", "Flugzeug", "Rakete"],
+          "correct_answer": "Wagen",
+          "question": "Tesla ist _________ Unternehmen"
+        },
+        {
+          "choices": ["hearing", "sleeping", "watching", "eating"],
+          "correct_answer": "hearing",
+          "question": "What are your ears for _________"
+        }
+      ]
     }
   ]
 }

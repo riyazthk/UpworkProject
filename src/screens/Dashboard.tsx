@@ -14,36 +14,34 @@ import {Button} from '../ui-kit/button';
 import {Text} from '../ui-kit/text';
 
 export const Dashboard = () => {
-  const answer = ['folgeo', 'commit', 'house', 'table'];
-
-  const [selected_choice_index, setSelected_choice_index] = useState(null);
-  const [selected_choice, setSelected_choice] = useState(null);
-  const [answer_checked, set_answer_checked] = useState(false);
-  const [correct_answer, setCorrrect_ans] = useState(false);
+  const [selectedChoiceIndex, setSelectedChoiceIndex] = useState(null);
+  const [selectedChoice, setSelectedChoice] = useState(null);
+  const [answerChecked, setAnswerChecked] = useState(false);
+  const [correctAnswer, setCorrectAnswer] = useState(false);
   const [loader, setLoader] = useState(false);
   const [questionList, setQuestionList] = useState([]);
-  const [current_question, setCurrent_question] = useState(0);
-  const [eng_split_sentence, setEng_split_sentence] = useState();
-  const [ger_split_sentence, setGer_split_sentence] = useState();
-  const [selected_ques_index, setSelected_ques_index] = useState();
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [engSplitSentence, setEngSplitSentence] = useState();
+  const [gerSplitSentence, setGerSplitSentence] = useState();
+  const [selectedQuesIndex, setSelectedQuesIndex] = useState();
 
   useEffect(() => {
-    setSelected_choice_index(null);
-    setSelected_choice(null);
-    set_answer_checked(false);
-    setCorrrect_ans(false);
-  }, [current_question]);
+    setSelectedChoiceIndex(null);
+    setSelectedChoice(null);
+    setAnswerChecked(false);
+    setCorrectAnswer(false);
+  }, [currentQuestion]);
 
   useEffect(() => {
     if (questionList?.length) {
-      setEng_split_sentence(
-        questionList[current_question]?.english?.question?.split(' '),
+      setEngSplitSentence(
+        questionList[0]?.questions[currentQuestion]?.question?.split(' '),
       );
-      setGer_split_sentence(
-        questionList[current_question]?.germany?.question?.split(' '),
+      setGerSplitSentence(
+        questionList[1]?.questions[currentQuestion]?.question?.split(' '),
       );
     }
-  }, [current_question, questionList, questionList?.length]);
+  }, [currentQuestion, questionList, questionList?.length]);
 
   useEffect(() => {
     setLoader(true);
@@ -66,19 +64,19 @@ export const Dashboard = () => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          setSelected_choice_index(index);
-          setSelected_choice(item);
+          setSelectedChoiceIndex(index);
+          setSelectedChoice(item);
         }}>
         <View
           style={
-            selected_choice_index === index
+            selectedChoiceIndex === index
               ? [
                   styles.answerView,
                   {backgroundColor: color.palette.darkBlue1, width: 80},
                 ]
               : styles.answerView
           }>
-          <Text>{selected_choice_index === index ? null : item}</Text>
+          <Text>{selectedChoiceIndex === index ? null : item}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -88,11 +86,11 @@ export const Dashboard = () => {
     return (
       <TouchableOpacity
         onPress={() => {
-          setSelected_ques_index(index);
+          setSelectedQuesIndex(index);
         }}>
-        {index === selected_ques_index && (
+        {index === selectedQuesIndex && (
           <View style={styles.translateView}>
-            <Text>{eng_split_sentence[selected_ques_index]}</Text>
+            <Text>{engSplitSentence[selectedQuesIndex]}</Text>
           </View>
         )}
         <View style={styles.textPara}>
@@ -102,14 +100,14 @@ export const Dashboard = () => {
             <>
               <View
                 style={
-                  !correct_answer && !answer_checked
-                    ? selected_choice
+                  !correctAnswer && !answerChecked
+                    ? selectedChoice
                       ? [
                           styles.answerView,
                           {elevation: 0, marginHorizontal: 10, height: 40},
                         ]
                       : styles.questionText
-                    : correct_answer
+                    : correctAnswer
                     ? [
                         styles.answerView,
                         {
@@ -131,11 +129,11 @@ export const Dashboard = () => {
                 }>
                 <Text
                   style={
-                    !answer_checked
+                    !answerChecked
                       ? {color: color.palette.black}
                       : {color: color.palette.white}
                   }>
-                  {selected_choice ?? item}
+                  {selectedChoice ?? item}
                 </Text>
               </View>
             </>
@@ -158,25 +156,25 @@ export const Dashboard = () => {
 
             <View style={styles.questionOuterView}>
               <FlatList
-                data={ger_split_sentence}
+                data={gerSplitSentence}
                 renderItem={renderQuestion}
                 horizontal
               />
             </View>
             <View style={styles.viewFlatlist}>
               <FlatList
-                data={questionList[current_question]?.germany?.choices}
+                data={questionList[1]?.questions[currentQuestion]?.choices}
                 renderItem={renderAnswerList}
                 numColumns={2}
               />
             </View>
 
-            {!answer_checked ? (
+            {!answerChecked ? (
               <View style={styles.buttonView}>
                 <Button
-                  title={selected_choice ? 'Check Answer' : 'Continue'}
+                  title={selectedChoice ? 'Check Answer' : 'Continue'}
                   style={
-                    selected_choice
+                    selectedChoice
                       ? [
                           styles.button,
                           {backgroundColor: color.palette.darkBlue2},
@@ -184,14 +182,14 @@ export const Dashboard = () => {
                       : styles.button
                   }
                   onPress={() => {
-                    set_answer_checked(true);
+                    setAnswerChecked(true);
                     if (
-                      selected_choice ===
-                      questionList[current_question]?.germany?.correct_answer
+                      selectedChoice ===
+                      questionList[1]?.questions[currentQuestion]?.correctAnswer
                     ) {
-                      setCorrrect_ans(true);
+                      setCorrectAnswer(true);
                     } else {
-                      setCorrrect_ans(false);
+                      setCorrectAnswer(false);
                     }
                   }}
                 />
@@ -199,7 +197,7 @@ export const Dashboard = () => {
             ) : (
               <View
                 style={
-                  correct_answer
+                  correctAnswer
                     ? styles.bottomSheet
                     : [
                         styles.bottomSheet,
@@ -215,21 +213,14 @@ export const Dashboard = () => {
                 </View>
                 <Button
                   title={'Continue'}
-                  style={[
-                    styles.button,
-                    {
-                      backgroundColor: color.palette.white,
-                      marginHorizontal: 20,
-                    },
-                  ]}
+                  style={[styles.button, styles.overrideBtnStyle]}
                   textStyle={
-                    correct_answer
+                    correctAnswer
                       ? {color: color.palette.darkBlue2}
                       : {color: color.palette.darkRed}
                   }
                   onPress={() => {
-                    // set_answer_checked(true);
-                    setCurrent_question(current_question + 1);
+                    setCurrentQuestion(currentQuestion + 1);
                   }}
                 />
               </View>
@@ -281,8 +272,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   viewFlatlist: {
-    // marginHorizontal: 50,
-    // a,
     alignItems: 'center',
     marginTop: 50,
   },
@@ -309,7 +298,6 @@ const styles = StyleSheet.create({
   button: {
     height: 50,
     borderRadius: 25,
-    // opacity: 0.2,
     backgroundColor: color.palette.darkBlue1,
   },
   bottomSheet: {
@@ -354,5 +342,9 @@ const styles = StyleSheet.create({
     top: -5,
     borderRadius: 5,
     width: 50,
+  },
+  overrideBtnStyle: {
+    backgroundColor: color.palette.white,
+    marginHorizontal: 20,
   },
 });
