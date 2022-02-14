@@ -24,6 +24,10 @@ export const Dashboard = () => {
   const [engSplitSentence, setEngSplitSentence] = useState();
   const [gerSplitSentence, setGerSplitSentence] = useState();
   const [selectedQuesIndex, setSelectedQuesIndex] = useState();
+  const [engLangIndex, setEngLangIndex] = useState(null);
+  const [gerLangIndex, setGerLangIndex] = useState(null);
+  const [resetQuestion, setResetQuestion] = useState(false);
+  const [resetFlag, setResetFlag] = useState(false);
 
   useEffect(() => {
     setSelectedChoiceIndex(null);
@@ -41,12 +45,14 @@ export const Dashboard = () => {
               ' ',
             ),
           );
+          setEngLangIndex(index);
         } else if (item?.language === 'germany') {
           setGerSplitSentence(
             questionList[index]?.questions[currentQuestion]?.question?.split(
               ' ',
             ),
           );
+          setGerLangIndex(index);
         }
       });
     }
@@ -66,7 +72,13 @@ export const Dashboard = () => {
       .catch((e) => {
         console.log('err', e);
       });
-  }, []);
+  }, [resetFlag]);
+
+  useEffect(() => {
+    if (!currentQuestion < questionList[gerLangIndex]?.questions?.length) {
+      setResetQuestion(true);
+    }
+  }, [currentQuestion, gerLangIndex, questionList]);
 
   const renderAnswerList = ({item, index}: any) => {
     return (
@@ -139,7 +151,9 @@ export const Dashboard = () => {
                 <Text
                   style={
                     !answerChecked
-                      ? {color: color.palette.black}
+                      ? selectedChoice
+                        ? {color: color.palette.black}
+                        : {color: color.palette.white}
                       : {color: color.palette.white}
                   }>
                   {selectedChoice ?? item}
@@ -151,6 +165,23 @@ export const Dashboard = () => {
       </TouchableOpacity>
     );
   };
+
+  const renderEngQuestion = ({item}: any) => {
+    return (
+      <View>
+        {!item?.includes('______') ? (
+          <Text style={[styles.questionText, styles.overrideText]}>{item}</Text>
+        ) : (
+          <Text style={[styles.questionText, styles.overrideAnswerText]}>
+            {questionList[engLangIndex]?.questions[currentQuestion]?.choices[
+              selectedChoiceIndex
+            ] ?? item}
+          </Text>
+        )}
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.whiteSheet}>
@@ -159,9 +190,14 @@ export const Dashboard = () => {
         ) : (
           <>
             <Text style={styles.title}>Fill in the missing word</Text>
-            <Text style={styles.question_ex_text}>
-              The <Text style={styles.boldText}>house</Text> is small
-            </Text>
+
+            <View style={styles.questionOuterView}>
+              <FlatList
+                data={engSplitSentence}
+                renderItem={renderEngQuestion}
+                horizontal
+              />
+            </View>
 
             <View style={styles.questionOuterView}>
               <FlatList
@@ -172,7 +208,10 @@ export const Dashboard = () => {
             </View>
             <View style={styles.viewFlatlist}>
               <FlatList
-                data={questionList[1]?.questions[currentQuestion]?.choices}
+                data={
+                  questionList[gerLangIndex]?.questions[currentQuestion]
+                    ?.choices
+                }
                 renderItem={renderAnswerList}
                 numColumns={2}
               />
@@ -181,7 +220,14 @@ export const Dashboard = () => {
             {!answerChecked ? (
               <View style={styles.buttonView}>
                 <Button
-                  title={selectedChoice ? 'Check Answer' : 'Continue'}
+                  title={
+                    currentQuestion <
+                    questionList[gerLangIndex]?.questions?.length
+                      ? selectedChoice
+                        ? 'Check Answer'
+                        : 'Continue'
+                      : 'Reset'
+                  }
                   style={
                     selectedChoice
                       ? [
@@ -190,15 +236,32 @@ export const Dashboard = () => {
                         ]
                       : styles.button
                   }
+                  disabled={
+                    !resetQuestion ? (selectedChoice ? false : true) : false
+                  }
                   onPress={() => {
                     setAnswerChecked(true);
                     if (
-                      selectedChoice ===
-                      questionList[1]?.questions[currentQuestion]?.correctAnswer
+                      currentQuestion <
+                      questionList[gerLangIndex]?.questions?.length
                     ) {
-                      setCorrectAnswer(true);
+                      if (
+                        selectedChoice ===
+                        questionList[gerLangIndex]?.questions[currentQuestion]
+                          ?.correct_answer
+                      ) {
+                        setCorrectAnswer(true);
+                      } else {
+                        setCorrectAnswer(false);
+                      }
                     } else {
+                      setResetFlag(!resetFlag);
+                      setSelectedChoiceIndex(null);
+                      setSelectedChoice(null);
+                      setAnswerChecked(false);
                       setCorrectAnswer(false);
+                      setResetQuestion(false);
+                      setCurrentQuestion(0);
                     }
                   }}
                 />
@@ -214,7 +277,11 @@ export const Dashboard = () => {
                       ]
                 }>
                 <View style={styles.rowView}>
-                  <Text style={styles.text}>Great Job!</Text>
+                  <Text style={styles.text}>
+                    {correctAnswer
+                      ? 'Great Job!'
+                      : `Answer: ${questionList[gerLangIndex]?.questions[currentQuestion]?.correct_answer}`}
+                  </Text>
                   <Image
                     source={require('../assets/icons/flag.png')}
                     style={styles.icon}
@@ -346,14 +413,27 @@ const styles = StyleSheet.create({
   },
   translateView: {
     backgroundColor: color.palette.white,
-    padding: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 2,
     position: 'absolute',
     top: -5,
     borderRadius: 5,
-    width: 50,
+    // width: 50,
   },
   overrideBtnStyle: {
     backgroundColor: color.palette.white,
     marginHorizontal: 20,
+  },
+  overrideText: {
+    textDecorationLine: 'none',
+    marginRight: 5,
+    marginTop: 0,
+    fontSize: 16,
+  },
+  overrideAnswerText: {
+    fontWeight: '700',
+    fontSize: 16,
+    marginTop: 0,
+    marginRight: 5,
   },
 });

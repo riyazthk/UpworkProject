@@ -34,9 +34,9 @@
           "question": "Tesla ist _________ Unternehmen"
         },
         {
-          "choices": ["hearing", "sleeping", "watching", "eating"],
-          "correct_answer": "hearing",
-          "question": "What are your ears for _________"
+          "choices": ["Hören", "Schlafen", "Aufpassen", "Essen"],
+          "correct_answer": "Hören",
+          "question": "Wofür sind deine Ohren ______"
         }
       ]
     }

@@ -82,7 +82,7 @@ export function Button(props: any) {
   const disableStyle =
     variant === 'link'
       ? {backgroundColor: color.palette.white}
-      : {backgroundColor: color.palette.disableColor};
+      : {backgroundColor: color.palette.darkBlue1};
 
   return (
     <Pressable
